@@ -27,6 +27,9 @@ class PostsController extends Controller
         return view('postCreate');
     }
 
+    /*
+      Create new blog post.
+     */
     public function create(Request $request)
     {
         
@@ -44,10 +47,13 @@ class PostsController extends Controller
         return redirect()->route('read', ['id' => $post->id]);
     }
 
+    /*
+      Display blog post.
+     */
     public function read($id)
     {
-        $post = Post::findOrFail($id);
-        return view('postRead', ['title' => $post->title, 'content' => $post->content]);
+        $post = Post::with(['comments', 'comments.user'])->findOrFail($id);
+        return view('postRead', ['title' => $post->title, 'content' => $post->content, 'id' => $id, 'comments' => $post->comments]);
     }
 
     /*
@@ -66,8 +72,16 @@ class PostsController extends Controller
         }
     }
 
+    /*
+      Update blog post with new values that user provided.
+     */
     public function update(Request $request, $id)
     {
+        $validatedData = $request->validate([
+            'title' => 'required|max:255',
+            'content' => 'required'
+        ]);
+        
         $post = Post::findOrFail($id);
         if($post->user_id === Auth::id())
         {
@@ -98,6 +112,9 @@ class PostsController extends Controller
         } 
     }
 
+    /*
+      Delete post.
+     */
     public function delete(Request $request, $id)
     {
         $post = Post::findOrFail($id);

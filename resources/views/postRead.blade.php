@@ -12,5 +12,50 @@
             </div>
         </div>
     </div>
+    <br>
+    <div class="row justify-content-center">
+	<div class="col-md-8">
+	    <div class="card">
+		<div class="card-body">
+		    @guest
+		    <h5 class="card-title text-center"> You need to log in to comment this blog post.</h5>
+		    @else
+		    <h5 class="card-title">Add comment</h5>
+		    <form method="POST" action="{{ route('comment', ['id' => $id]) }}">
+			@csrf
+			<div class="form-group">
+			    <textarea class="form-control" id="content" rows="5" name="comment_text"></textarea>
+			</div>
+			<button type="submit" class="btn btn-primary mb-2">Comment</button>
+		    </form>
+		    @endguest
+		</div>
+	    </div>
+	</div>
+    </div>
+    @if(count($comments) === 0)
+	<div class="row justify-content-center">
+	    <div class="col-md-8">
+		<div class="card">
+		    <div class="card-body">
+			<h5 class="card-title text-center">There are no comments for this post.</h5>
+		    </div>
+		</div>
+	    </div>
+	</div>
+    @else
+	@foreach($comments as $comment)
+	    <div class="row justify-content-center">
+		<div class="col-md-8">
+		    <div class="card">
+			<div class="card-body">
+    			    <h5 class="card-title">{{ $comment->user->name }}</h5>
+			    {{ $comment->comment_text }}
+			</div>
+		    </div>
+		</div>
+	    </div>
+	@endforeach
+    @endif
 </div>
 @endsection

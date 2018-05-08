@@ -26,3 +26,5 @@ Route::get('update/{id}', 'PostsController@updateForm')->name('updateForm');
 Route::post('update/{id}', 'PostsController@update')->name('update');
 Route::get('delete/{id}', 'PostsController@deleteForm')->name('deleteForm');
 Route::post('delete/{id}', 'PostsController@delete')->name('delete');
+
+Route::post('comment/{id}', 'CommentsController@comment')->name('comment');
