@@ -17,6 +17,10 @@
 			    <label for="content">Content</label>
 			    <textarea class="form-control" id="content" rows="5" name="content"></textarea>
 			</div>
+			<div class="form-group">
+			    <label for="title">Tags</label>
+			    <input type="text" class="form-control" id="tags" name="tags">
+			</div>
 			<button type="submit" class="btn btn-primary mb-2">Post</button>
                     </form>
                 </div>

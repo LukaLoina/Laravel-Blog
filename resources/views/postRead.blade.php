@@ -24,6 +24,9 @@
 		    </form>
 		    @endif
 		    @endauth
+		    @foreach($tags as $tag)
+			<div>{{ $tag->name }}</div>
+		    @endforeach
                 </div>
             </div>
         </div>

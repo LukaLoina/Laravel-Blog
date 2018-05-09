@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Post;
 use App\Like;
+use App\Tag;
 
 class PostsController extends Controller
 {
@@ -45,6 +46,21 @@ class PostsController extends Controller
             'content' => $request->input('content')
         ]);
         $post->save();
+
+        if($request->has('tags'))
+        {
+            $tags = explode(',', $request->input('tags'));
+            foreach($tags as $rq_tag)
+            {
+                $rq_tag = trim($rq_tag);
+                if($rq_tag === "")
+                {
+                    continue;
+                }
+                $db_tag = Tag::firstOrCreate(['name' => $rq_tag]);
+                $post->tags()->attach($db_tag);
+            }
+        }
         return redirect()->route('read', ['id' => $post->id]);
     }
 
@@ -53,13 +69,13 @@ class PostsController extends Controller
      */
     public function read($id)
     {
-        $post = Post::with(['comments', 'comments.user'])->withCount('likes')->findOrFail($id);
+        $post = Post::with(['comments', 'comments.user', 'tags'])->withCount('likes')->findOrFail($id);
         $like = null;
         if(Auth::check())
         {
             $like = Like::where([['user_id', Auth::id()], ['post_id', $id]])->first();
         }
-        return view('postRead', ['title' => $post->title, 'content' => $post->content, 'id' => $id, 'comments' => $post->comments, 'likes_count' => $post->likes_count, 'user_liked' => $like]);
+        return view('postRead', ['title' => $post->title, 'content' => $post->content, 'id' => $id, 'comments' => $post->comments, 'likes_count' => $post->likes_count, 'user_liked' => $like, 'tags' => $post->tags]);
     }
 
     /*
@@ -67,10 +83,11 @@ class PostsController extends Controller
      */
     public function updateForm($id)
     {
-        $post = Post::findOrFail($id);
+        $post = Post::with(['tags'])->findOrFail($id);
         if($post->user_id === Auth::id())
         {
-            return view('postUpdate', ['id' => $id, 'title' => $post->title, 'content' => $post->content]);
+            //$imploded_tags = implode(", ", $post->tags);
+            return view('postUpdate', ['id' => $id, 'title' => $post->title, 'content' => $post->content, 'tags' => $post->tags->implode('name', ', ')]);
         }
         else
         {
@@ -94,6 +111,24 @@ class PostsController extends Controller
             $post->title = $request->input('title');
             $post->content = $request->input('content');
             $post->save();
+
+            if($request->has('tags'))
+            {
+                $tags = explode(',', $request->input('tags'));
+                $tag_array = array();
+                foreach($tags as $rq_tag)
+                {
+                    $rq_tag = trim($rq_tag);
+                    if($rq_tag === "")
+                    {
+                        continue;
+                    }
+                    $db_tag = Tag::firstOrCreate(['name' => $rq_tag]);
+                    $tag_array[] = $db_tag->id;
+                }
+                $post->tags()->sync($tag_array);
+            }
+            
             return redirect()->route('read', ['id' => $post->id]);
         }
         else
