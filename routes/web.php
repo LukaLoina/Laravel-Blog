@@ -28,3 +28,6 @@ Route::get('delete/{id}', 'PostsController@deleteForm')->name('deleteForm');
 Route::post('delete/{id}', 'PostsController@delete')->name('delete');
 
 Route::post('comment/{id}', 'CommentsController@comment')->name('comment');
+
+Route::post('like/{id}', 'LikesController@like')->name('like');
+Route::post('unlike/{id}', 'LikesController@unlike')->name('unlike');

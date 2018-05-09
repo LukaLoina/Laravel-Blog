@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\Post;
+use App\Like;
 
 class PostsController extends Controller
 {
@@ -52,8 +53,13 @@ class PostsController extends Controller
      */
     public function read($id)
     {
-        $post = Post::with(['comments', 'comments.user'])->findOrFail($id);
-        return view('postRead', ['title' => $post->title, 'content' => $post->content, 'id' => $id, 'comments' => $post->comments]);
+        $post = Post::with(['comments', 'comments.user'])->withCount('likes')->findOrFail($id);
+        $like = null;
+        if(Auth::check())
+        {
+            $like = Like::where([['user_id', Auth::id()], ['post_id', $id]])->first();
+        }
+        return view('postRead', ['title' => $post->title, 'content' => $post->content, 'id' => $id, 'comments' => $post->comments, 'likes_count' => $post->likes_count, 'user_liked' => $like]);
     }
 
     /*

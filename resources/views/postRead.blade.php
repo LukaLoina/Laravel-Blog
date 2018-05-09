@@ -8,6 +8,22 @@
                 <div class="card-header">{{ $title }}</div>
                 <div class="card-body">
 		    {{ $content }}
+		</div>
+		<div class="card-footer text-muted">
+		    <div>{{ $likes_count }}</div>
+		    @auth
+		    @if($user_liked === null)
+		    <form method="POST" action="{{ route('like', ['id' => $id]) }}">
+			@csrf
+			<button type="submit" class="btn btn-primary mb-2">Like</button>
+		    </form>
+		    @else
+		    <form method="POST" action="{{ route('unlike', ['id' => $id]) }}">
+			@csrf
+			<button type="submit" class="btn btn-primary mb-2">Unlike</button>
+		    </form>
+		    @endif
+		    @endauth
                 </div>
             </div>
         </div>
