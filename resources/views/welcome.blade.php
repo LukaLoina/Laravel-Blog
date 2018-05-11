@@ -1,95 +1,69 @@
-<!doctype html>
-<html lang="{{ app()->getLocale() }}">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.app')
 
-        <title>Laravel</title>
-
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Raleway', sans-serif;
-                font-weight: 100;
-                height: 100vh;
-                margin: 0;
-            }
-
-            .full-height {
-                height: 100vh;
-            }
-
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 12px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
-                        <a href="{{ route('register') }}">Register</a>
-                    @endauth
-                </div>
-            @endif
-
-            <div class="content">
-                <div class="title m-b-md">
-                    Laravel
-                </div>
-
-                <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
-            </div>
-        </div>
-    </body>
-</html>
+@section('content')
+    <div class="container">
+	<div class="row justify-content-center">
+	    <div class="col-md-8">
+		<div class="card">
+		    <div class="card-header">
+			options
+		    </div>
+		    <div class="card-body">
+			<form method="POST" action="{{ route('filter', ['order_by' => $order_by, 'authors' => $authors]) }}">
+			    @csrf
+			    <div class="form-group">
+				<label for="tags">Filter by tags</label>
+				<input type="text" class="form-control" id="tags" name="tags" value="{{ $tags }}">
+			    </div>
+			    <button type="submit" class="btn btn-primary mb-2">Filter posts</button>
+			</form>
+		    </div>
+		    <div class="card-body">
+			Order by: <a class="btn btn-primary" href="{{ route('sort', ['order_by' => "date",  'tags' => $tags, 'authors' => $authors] ) }}">Date</a>
+			<a class="btn btn-primary" href="{{ route('sort', ['order_by' => "user", 'tags' => $tags, 'authors' => $authors] ) }}">Author name</a>
+			<a class="btn btn-primary" href="{{ route('sort', ['order_by' => "likes", 'tags' => $tags, 'authors' => $authors] ) }}">Likes</a>
+		    </div>
+		    @if($ignored_authors != null)
+		    <div class="card-body">
+			Unhide user:
+			@foreach($ignored_authors as $author)
+			    <div><a class="badge badge-pill badge-primary" href="{{ route('sort', ['order_by' => $order_by, 'tags' => $tags, 'authors' => implode(',', array_diff($authors_array, [$author->id]))] ) }}">{{  $author->name }}</a></div>
+			@endforeach
+		    </div>
+		    @endif
+		</div>
+	    </div>
+	</div>
+	@foreach($posts as $post)
+        <br>
+	    <div class="row justify-content-center">
+		<div class="col-md-8">
+		    <div class="card">
+			<div class="card-header">
+			    {{ $post->user->name }}
+			</div>
+			<div class="card-body">
+			    <a href="{{ route('read', ['id' => $post->id]) }}"><h5 class="title">{{ $post->title }}</h5></a>
+			    @if(strlen($post->content) < 100)
+				{{ $post->content }}
+			    @else
+				{{ substr($post->content, 0, 97)."..." }}
+			    @endif
+			</div>
+			<div class="card-footer">
+			    <div>{{ $post->likes_count }} <img class="like-icon" src="/thumbsup.svg" alt="likes"></div>
+			    <div>{{ $post->comments_count }} <img class="like-icon" src="/comment.svg" alt="commentss"></div>
+			    @foreach($post->tags as $tag)
+				<span class="badge badge-primary"> {{ $tag->name }} </span>
+			    @endforeach
+			    <div>posted at {{ $post->created_at->format("H:i d/m/y") }}</div>
+			    <a class="btn btn-outline-primary btn-sm" style="line-height: 1;" href="{{ route('sort', ['order_by' => $order_by, 'tags' => $tags, 'authors' => implode(',',  array_merge($authors_array, [$post->user->id]))])}}">
+				Hide this user
+			    </a>
+			</div>
+		    </div>
+		</div>
+	    </div>
+	@endforeach
+    </div>
+@endsection

@@ -11,9 +11,9 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'HomeController@sort')->name('welcome');
+Route::get('/sort/{order_by}', 'HomeController@sort')->name('sort');
+Route::post('/sort/{order_by}', 'HomeController@filter')->name('filter');
 
 Auth::routes();
 

@@ -50,6 +50,7 @@ class PostsController extends Controller
         if($request->has('tags'))
         {
             $tags = explode(',', $request->input('tags'));
+            $tag_array = array();
             foreach($tags as $rq_tag)
             {
                 $rq_tag = trim($rq_tag);
@@ -58,8 +59,9 @@ class PostsController extends Controller
                     continue;
                 }
                 $db_tag = Tag::firstOrCreate(['name' => $rq_tag]);
-                $post->tags()->attach($db_tag);
+                $tag_array[] = $db_tag->id;
             }
+            $post->tags()->sync($tag_array);
         }
         return redirect()->route('read', ['id' => $post->id]);
     }
@@ -69,13 +71,13 @@ class PostsController extends Controller
      */
     public function read($id)
     {
-        $post = Post::with(['comments', 'comments.user', 'tags'])->withCount('likes')->findOrFail($id);
+        $post = Post::with(['comments', 'comments.user', 'tags', 'user'])->withCount(['likes', 'comments'])->findOrFail($id);
         $like = null;
         if(Auth::check())
         {
             $like = Like::where([['user_id', Auth::id()], ['post_id', $id]])->first();
         }
-        return view('postRead', ['title' => $post->title, 'content' => $post->content, 'id' => $id, 'comments' => $post->comments, 'likes_count' => $post->likes_count, 'user_liked' => $like, 'tags' => $post->tags]);
+        return view('postRead', ['post' => $post, 'user_liked' => $like]);
     }
 
     /*
@@ -86,8 +88,8 @@ class PostsController extends Controller
         $post = Post::with(['tags'])->findOrFail($id);
         if($post->user_id === Auth::id())
         {
-            //$imploded_tags = implode(", ", $post->tags);
-            return view('postUpdate', ['id' => $id, 'title' => $post->title, 'content' => $post->content, 'tags' => $post->tags->implode('name', ', ')]);
+            $imploded_tags = $post->tags->implode('name', ', ');
+            return view('postUpdate', ['post' => $post, 'tags' => $imploded_tags]);
         }
         else
         {
