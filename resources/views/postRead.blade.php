@@ -8,7 +8,7 @@
                 <div class="card-header">{{ $post->user->name }}</div>
                 <div class="card-body">
 		    <h5 class="title">{{ $post->title }}</h5>
-		    {{ $post->content }}
+		    {!! nl2br($post->content) !!}
 		</div>
 		<div class="card-footer text-muted">
 		    <div>{{ $post->comments_count }} <img class="like-icon" src="/comment.svg" alt="commentss"></div>
@@ -75,7 +75,7 @@
 			<div class="card-body">
     			    <h5 class="card-title">{{ $comment->user->name }}</h5>
 			    <h6 class="card-subtitle mb-2 text-muted">posted at {{ $comment->created_at->format("H:i d/m/y") }}</h6>
-			    {{ $comment->comment_text }}
+			    {!!  nl2br($comment->comment_text) !!}
 			</div>
 		    </div>
 		</div>

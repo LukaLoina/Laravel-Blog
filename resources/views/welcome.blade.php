@@ -45,9 +45,9 @@
 			<div class="card-body">
 			    <a href="{{ route('read', ['id' => $post->id]) }}"><h5 class="title">{{ $post->title }}</h5></a>
 			    @if(strlen($post->content) < 100)
-				{{ $post->content }}
+				{!! nl2br($post->content) !!}
 			    @else
-				{{ substr($post->content, 0, 97)."..." }}
+				{!!  nl2br(substr($post->content, 0, 97)."...") !!}
 			    @endif
 			</div>
 			<div class="card-footer">
