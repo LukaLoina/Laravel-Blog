@@ -19,7 +19,7 @@
 			</div>
 			<div class="form-group">
 			    <label for="tags">Tags</label>
-			    <input type="text" class="form-control" id="tags" name="tags" value="{{ $tags }}">
+			    <input type="text" class="form-control" id="tags" name="tags" value="{{ $tags }}" placeholder="first tag, second tag, third tag">
 			</div>
 			<button type="submit" class="btn btn-primary mb-2">Update</button>
                     </form>

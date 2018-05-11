@@ -19,7 +19,7 @@
 			</div>
 			<div class="form-group">
 			    <label for="title">Tags</label>
-			    <input type="text" class="form-control" id="tags" name="tags">
+			    <input type="text" class="form-control" id="tags" name="tags" placeholder="first tag, second tag, third tag">
 			</div>
 			<button type="submit" class="btn btn-primary mb-2">Post</button>
                     </form>
