@@ -1,0 +1,43 @@
+Ovaj tekst dokument navodi datoteke i direktorije ove web aplikacije.
+Datoteke koje su generirane pomoču predloška za novi Laravel projekt, a koje nisu na nikakav način promjenjene tjekom izrade, nisu navedene.
+Detaljniji opisi se nalaze unutar samih datoteki.
+
+/public - Ovaj direktorij sadrži statične datoteke ovog projekta. Tjekom izrade stranice u ovaj direktorij su spremljene slike, css datoteke i javascript datoteke.
+
+/routes/web.php - Ova datoteka sadrži popis definicija koje govore Laravelu što da izvrši kada korisnik zatraži neki URL.
+
+Datoteke navedene u ovom popisu sadrže modele, objekte koji predstavljaju red u bazi podataka, koji se koriste u ovom projektu.
+/app/Comment.php
+/app/Like.php
+/app/Post.php
+/app/Tag.php
+
+Datoteke navedene u ovom popisu sadrže kontrolere, objekte koji sadrže logiku koja se izvršava kada korisnik pošalje upit na web server, koji se koriste u ovom projektu.
+/app/Http/CommentsController.php
+/app/Http/HomeController.php
+/app/Http/LikesController.php
+/app/Http/PostsController.php
+
+Datoteke navedene u ovom popisu sadrže viewi, datoteke iz kojih se stvaraju web stranice koje se prikazuju korisniku, koji se koriste u ovom projektu.
+/resources/views/home.blade.php
+/resources/views/postCreate.blade.php
+/resources/views/postDelete.blade.php
+/resources/views/postRead.blade.php
+/resources/views/postUpdate.blade.php
+/resources/views/welcome.blade.php
+/resources/views/layouts/app.blade.php
+
+Datoteke navedene u ovom popisu sadrže migracije, naredbe koje definiraju korake kojima dolazimo do nekog stanja baze podataka, koje se koriste u ovom projektu.
+/database/migrations/2018_05_03_144845_create_posts_table.php
+/database/migrations/2018_05_05_191916_create_comments_table.php
+/database/migrations/2018_05_08_162743_create_likes_table.php
+/database/migrations/2018_05_09_123408_create_tags_table.php
+/database/migrations/2018_05_10_120335_post.php
+/database/migrations/2018_05_10_221959_additional_constraints.php
+
+Datoteke navedene u ovom popisu su generirane iz predloška naredbom "php artisan make:auth" i nalaze se u istim direktorijima kao i datoteke koje su pisane za potrebe ovog projekta.
+/app/User.php - Model generiran iz predloška.
+/app/Http/Auth - Ovaj direktorij sadrži kontorlere za prijavu, registraciju, itd.
+/resource/views/auth/ - Ovaj direktorij sadrži viewe potrebne za prijavu, registraciju, itd.
+/database/migrations/2014_10_12_000000_create_users_table.php - Migracija baze podataka koja stvara tablice potrebne za prijavu korisnika.
+/database/migrations/2014_10_12_100000_create_password_resets_table.php -Migracija baze podataka koja stvara tablice potrebne za promjenu lozinke.
